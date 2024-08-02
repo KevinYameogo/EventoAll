@@ -5,7 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project2</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://kit.fontawesome.com/5f706d202e.js" crossorigin="anonymous"></script>
     <script defer src="app.js"></script>
   </head>
-  <body></body>
+  <body>
+    <div class="wrapper">
+      <!--Popup-->
+      <div class="popup" id="popup-main">
+        <div class="popup-overlay popup-button" data-target="#popup-main"></div>
+        <div class="popup-inner">
+          <h2>Error:</h2>
+          <p>
+            There are currently no events listed for PE. Try a different country code, as PE lacks the required embedded arrays for event listings.
+          </p>
+          <i class="fa-sharp-duotone fa-solid fa-circle-exclamation"></i>
+          <div class="button popup-button" data-target="#popup-main"><i class="ri-close-circle-fill"></i></div>
+        </div>
+      </div>
+      <!--popup end-->
+      <header class="header">
+        <div class="header-content">
+          <div class="logo-container">
+            <h1>Even<span class="logo-span">to</span>ALL</h1>
+          </div>
+          <nav class="nav-container">
+            <ul class="nav-list-cont">
+              <li class="nav-item">
+                <a href="#home"  class="nav-list navl-1">Home</a>
+              </li>
+              <li class="nav-item">
+                <a  href="#about"  class="nav-list navl-2">About</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <section class="home-section" id="home">
+        <div class="home-wrapper">
+        <div class="h-first-section">   
+          <h1 class="h-heading"><span>Even<span class="inner-span">to</span>All</span> : Your ultimate event <span>guide</span></h1>
+          <p class="h-p">
+            Discover all the <span>events</span> that interest you from around the world with
+            just a click. Plus, get <span>detailed information</span> to help you make
+            informed decisions about which events to attend.
+          </p>
+        </div>
+        <div class="h-second-section">
+          <form class="ss-form">
+            <input
+              type="text"
+              placeholder="Enter CountryCode"
+              class="form-input"
+            />
+          </form>
+          <button type="submit" class="info-Btn popup-button" data-target="#popup-main">Get information</button>
+          <div class="dropmenu-container">
+            <label for="drop-menu" class="dropMenu-label">Filter by:</label>
+            <select  id="drop-menu" class="drop-menu">
+              <option value="all">All</option>
+              <option value="sport">Sport</option>
+              <option value="music">Music</option>
+            </select>
+          </div>
+        </div>
+      </section>
+      <section class="about-section"  id="about">
+        <div class="about-wrapper">
+          <h1 class="about-heading">Even<span class="inner-span2">to</span>All</h1>
+          <div class="about-p-cont">
+          <p class="about-p">
+            By utilizing the <span class="inner-span5">Ticketmaster API</span>, EventoAll provides accurate and up-to-date information, ensuring a comprehensive and engaging event discovery experience tailored to your needs. However, some country codes might not return event information due to limited<span class="inner-span3"> API coverage or data restrictions</span>, and in some cases, <span class="inner-span4">no data</span> at all. 
+          </p>
+        </div>
+          <i class="ri-error-warning-line"></i>
+        </div>
+      </section>
+      <footer class="footer">
+        <div class="footer-wrapper">
+        <div class="footer-top">
+          <p><i class="ri-star-smile-line"></i>By Kevin Yameogo, 2024.</p>
+        </div>
+        <div class="footer-bottom">
+        <a href="" class="box3-linkden"><p>Linkden</p></a>
+        <a href="" class="box3-github"><p>Github</p></a>
+      </div>
+    </div>
+      </footer>
+      
+    </div>
+  </body>
 </html>
