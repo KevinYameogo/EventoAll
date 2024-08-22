@@ -3,10 +3,12 @@ const headerEl = document.querySelector(".header");
 const headercontEl = document.querySelector(".header-content");
 const accordionContent1 = document.querySelectorAll(".b-inner1-cont");
 const accordionContent2 = document.querySelectorAll(".b-inner2-cont");
+const dropMenu = document.querySelector(".drop-menu");
 
 //event listeners
 window.addEventListener("scroll", fixNav);
 window.addEventListener("DOMContentLoaded", changeRadioBg);
+window.addEventListener("DOMContentLoaded", disabled);
 
 //functions
 
@@ -34,6 +36,9 @@ window.onload = () => {
   });
 };
 
+function disabled() {
+  dropMenu.disabled = true;
+}
 function changeRadioBg() {
   const Infocontainers = document.querySelectorAll(".main");
 
