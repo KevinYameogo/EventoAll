@@ -1,2 +1,1 @@
-# Project-2
- 
+EventoALl: Html, CSS, and JS Project
