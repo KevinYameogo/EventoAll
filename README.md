@@ -4,14 +4,16 @@
 
 ## This project is centered on creating an interactive event information system using data from the Ticketmaster API. It demonstrates several key aspects of modern web development:
 
--Asynchronous Programming(fetch, async/await)
+-Asynchronous Programming (fetch, async/await)
 
--DOM Manipulation(to create, modify and interact with HTML elements dynamically)
+-DOM Manipulation (to create, modify and interact with HTML elements dynamically)
 
--Data processing and Display(Parse and process JSON data received,Dynamically create complex HTML structures based on the received data,Filter and display data based on user input)
+-Data processing and Display (Parse and process JSON data received,Dynamically create complex HTML structures based on the received data,Filter and display data based on user input)
 
 -Event Handling
 
 -Error handling
 
-## Watch visualizer
+## visualizer
+
+![](/main/public/eventoall-image.png)
