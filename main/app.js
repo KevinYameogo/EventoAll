@@ -1,8 +1,6 @@
 //declarations
 const headerEl = document.querySelector(".header");
 const headercontEl = document.querySelector(".header-content");
-const accordionContent1 = document.querySelectorAll(".b-inner1-cont");
-const accordionContent2 = document.querySelectorAll(".b-inner2-cont");
 const dropMenu = document.getElementById("drop-menu");
 const getInfoBtn = document.querySelector(".info-Btn");
 const formInputEl = document.querySelector(".form-input");
@@ -13,24 +11,26 @@ const dropmenuTooltip = document.querySelector(".dropmenu-container .tooltip");
 const infoListEl = document.querySelector(".info-list");
 
 //Event listeners
+
 window.addEventListener("scroll", fixNav);
-window.addEventListener("DOMContentLoaded", changeRadioBg);
 window.addEventListener("DOMContentLoaded", disabledDropMenu);
+
 getInfoBtn.addEventListener("click", async () => {
   infoListEl.innerHTML = "";
   await getData();
   checkTooltipVisibility();
+  changeRadioBg();
+  const accordionContent1 = document.querySelectorAll(".b-inner1-cont");
+  const accordionContent2 = document.querySelectorAll(".b-inner2-cont");
+  accordionFuntion(accordionContent1);
+  accordionFuntion(accordionContent2);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  popupBtn();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  checkTooltipVisibility();
-});
+document.addEventListener("DOMContentLoaded", popupBtn);
+document.addEventListener("DOMContentLoaded", checkTooltipVisibility);
 
 //functions
+
 let hasRetrievedData = false;
 async function getData() {
   let formValue = formInputEl.value.toUpperCase();
@@ -75,22 +75,30 @@ async function getData() {
 }
 
 //display data
+let dropmenuArr = [];
+
 function displayEvents(data) {
   let events = data._embedded.events;
   const names = [];
   const dropmenuSegments = [];
+
   events.forEach((event) => {
     if (!names.includes(event.name)) {
       const promoterName = event.promoter ? event.promoter.name : "Unknown";
+
       const timezoneEl = event.dates ? event.dates.timezone : "Unkown";
+
       const localDate = event.dates ? event.dates.start.localDate : "unknow";
+
       const localTime = event.dates.start.localTime
         ? event.dates.start.localTime
         : "Time Be Announced!";
 
       const awareness = event.info ? event.info : "no info";
+
       const getTicket = event.url ? event.url : "no link provided";
       const pSaleDate = event.sales;
+
       const startTime = pSaleDate.public.startDateTime
         ? pSaleDate.public.startDateTime
         : "no Starting time given";
@@ -103,10 +111,12 @@ function displayEvents(data) {
       const endTime = pSaleDate.public.endDateTime
         ? pSaleDate.public.endDateTime
         : "no ending time given";
+
       const endTimeFinal =
         endTime !== "no ending time given"
           ? endTime.split("T").join(" - ")
           : "no ending time given";
+
       const minMaxRange = event.priceRanges
         ? `$${event.priceRanges[0].min}-$${event.priceRanges[0].max}`
         : "unknown";
@@ -123,11 +133,15 @@ function displayEvents(data) {
       } else if (typeof pSaleDate.presales === "string") {
         presaleData = event.presales;
       }
+
       const ticketStatus = event.dates ? event.dates.status.code : "no info";
+
       const seatmapUrl = event.seatmap ? event.seatmap.staticUrl : "none";
+
       const venues = event._embedded.venues
         ? event._embedded.venues
         : "no venues";
+
       const parkingDetails = venues[0].parkingDetail
         ? venues[0].parkingDetail
         : "no parking info";
@@ -170,6 +184,7 @@ function displayEvents(data) {
       const segments = event.classifications
         ? event.classifications[0].segment.name
         : "no segment";
+
       dropmenuSegments.push(segments);
 
       //pushing to names
@@ -201,10 +216,30 @@ function displayEvents(data) {
 
   addDropMenuValues(dropmenuArr);
   enabledDropMenu();
-  console.log("names:", names);
-  console.log("dropmenusegs:", dropmenuArr);
+
   names.forEach((name, index) => {
     const container = CreateContainer(name, index);
+  });
+
+  dropMenu.addEventListener("change", (e) => {
+    filterContainers(dropmenuArr, e);
+  });
+}
+
+function filterContainers(dropmenuArr, e) {
+  //
+  const option = [];
+  let elDatasetValue;
+  const infoListElements = Array.from(infoListEl.children);
+
+  infoListElements.forEach((element) => {
+    elDatasetValue = element.dataset.optionValue;
+    if (e.target.value === elDatasetValue || e.target.value === "all") {
+      option.push(element);
+      element.style.display = "block";
+    } else {
+      element.style.display = "none";
+    }
   });
 }
 
@@ -212,6 +247,7 @@ function CreateContainer(name, index) {
   //info container
   const infoContainer = document.createElement("div");
   infoContainer.classList.add("info-container");
+  infoContainer.dataset.optionValue = name.segment.toLowerCase();
 
   //info-top
   const infoTop = document.createElement("div");
@@ -238,48 +274,59 @@ function CreateContainer(name, index) {
   //top-inner1-cont1
   const topInner1Cont1 = document.createElement("div");
   topInner1Cont1.classList.add("top-inner1-cont1");
+
   //event name
   const eventNameH1 = document.createElement("h1");
   eventNameH1.innerText = name.name;
+
   //promoter div
   const promoterDiv = document.createElement("div");
   promoterDiv.classList.add("inner1-cont1-div1");
+
   const promoterH3 = document.createElement("h3");
   promoterH3.innerText = "Promoter:";
+
   const promoterP = document.createElement("p");
   promoterP.innerText = name.promoter;
+
   promoterDiv.appendChild(promoterH3);
   promoterDiv.appendChild(promoterP);
+
   topInner1Cont1.appendChild(eventNameH1);
   topInner1Cont1.appendChild(promoterDiv);
 
   //top-inner1-cont2
   const topInner1Cont2 = document.createElement("div");
   topInner1Cont2.classList.add("top-inner1-cont2");
+
   const eventImage = addImage(name);
   topInner1Cont2.appendChild(eventImage);
 
   //top-inner2
   const topInner2 = document.createElement("div");
   topInner2.classList.add("top-inner2");
+
   //top-inner2-cont1
   const topInner2Cont1 = document.createElement("div");
   topInner2Cont1.classList.add("top-inner2-cont1");
+
   const statusTitleP = document.createElement("p");
   statusTitleP.innerText = "Status:";
   statusTitleP.classList.add("ps");
-  const statusMainP = document.createElement("p");
-  const statusMainIcon = document.createElement("i");
-  statusMainIcon.classList.add("ri-circle-line");
-  statusMainP.append(statusMainIcon, name.ticketSaleStatus);
+
+  const statusMainP = addStatusMain(name);
+
+  //color1
   topInner2Cont1.appendChild(statusTitleP);
   topInner2Cont1.appendChild(statusMainP);
 
   //top-inner2-cont2
   const topInner2Cont2 = document.createElement("div");
   topInner2Cont2.classList.add("top-inner2-cont2");
+
   const inner2Cont2Div1 = document.createElement("div");
   inner2Cont2Div1.classList.add("inner2-cont2-div1");
+
   const priceLabel = document.createElement("p");
   priceLabel.classList.add("pricelabel");
   priceLabel.innerText = "Price Range:";
@@ -287,38 +334,48 @@ function CreateContainer(name, index) {
   const priceRange = document.createElement("p");
   priceRange.classList.add("pricerange");
   priceRange.innerText = name.minMaxRange;
+
   inner2Cont2Div1.appendChild(priceLabel);
   inner2Cont2Div1.appendChild(priceRange);
 
   const inner2Cont2Div2 = document.createElement("div");
   inner2Cont2Div2.classList.add("inner2-cont2-div2");
+
   const addressLabel = document.createElement("p");
   addressLabel.classList.add("addresslabel");
   addressLabel.innerText = "Address:";
+
   const addressMain = addAddress(name);
+
   inner2Cont2Div2.appendChild(addressLabel);
   inner2Cont2Div2.appendChild(addressMain);
+
   topInner2Cont2.appendChild(inner2Cont2Div1);
   topInner2Cont2.appendChild(inner2Cont2Div2);
 
   //top inner appends
   infoTopInner.appendChild(topInnerRadio1);
   infoTopInner.appendChild(topInnerRadio2);
+
   infoTopInner.appendChild(topInner1);
   infoTopInner.appendChild(topInner2);
+
   topInner1.appendChild(topInner1Cont1);
   topInner1.appendChild(topInner1Cont2);
+
   topInner2.appendChild(topInner2Cont1);
   topInner2.appendChild(topInner2Cont2);
 
   //top manual labels
   const topLabel1 = createLabel(`top-radio1-${index}`);
   const topLabel2 = createLabel(`top-radio2-${index}`);
+
   //manual div
   const manualLabelsDiv = document.createElement("div");
   manualLabelsDiv.classList.add("manual-nav");
   manualLabelsDiv.appendChild(topLabel1);
   manualLabelsDiv.appendChild(topLabel2);
+
   infoTop.appendChild(infoTopInner);
   infoTop.appendChild(manualLabelsDiv);
 
@@ -331,7 +388,6 @@ function CreateContainer(name, index) {
   infoMiddleInner.classList.add("info-middle-inner");
 
   // info-middle-inner radio inputs
-
   const middleInnerRadio1 = createRadioInput(
     `middle-radio1-${index}`,
     `middle-name-${index}`
@@ -340,23 +396,32 @@ function CreateContainer(name, index) {
     `middle-radio2-${index}`,
     `middle-name-${index}`
   );
+
   //middle-inner1
   const middleInner1 = document.createElement("div");
   middleInner1.classList.add("middle-inner1", "first");
+
   const middleDateContainer = document.createElement("div");
   middleDateContainer.classList.add("m-inner1-dateCont");
+
   const dateLabel = document.createElement("p");
   dateLabel.innerText = "Date:";
+
   const dateMain = document.createElement("p");
   dateMain.innerText = name.localDate;
+
   middleDateContainer.appendChild(dateLabel);
   middleDateContainer.appendChild(dateMain);
+
   const middleTimeContainer = document.createElement("div");
   middleTimeContainer.classList.add("m-inner1-timeCont");
+
   const timeLabel = document.createElement("p");
   timeLabel.innerText = "Time:";
+
   const timeMain = document.createElement("p");
   timeMain.innerText = `${name.localTime} ${name.timezone} TimeZone`;
+
   middleTimeContainer.appendChild(timeLabel);
   middleTimeContainer.appendChild(timeMain);
 
@@ -365,9 +430,11 @@ function CreateContainer(name, index) {
   ticketLink.href = name.url;
   ticketLink.target = "_blank";
   ticketLink.textDecoration = "none";
+
   const ticketText = document.createElement("p");
   ticketText.classList.add("innner-link-p");
   ticketText.innerText = name.url;
+
   ticketLink.appendChild(ticketText);
 
   const publicSaleContainer = document.createElement("div");
@@ -379,16 +446,20 @@ function CreateContainer(name, index) {
 
   const publicSaleStart = document.createElement("p");
   publicSaleStart.classList.add("start-p");
+
   const publicStartSpan = document.createElement("span");
   publicStartSpan.classList.add("start-span");
   publicStartSpan.innerText = name.publicSalesStart;
+
   publicSaleStart.append("Starts:", publicStartSpan);
 
   const publicSaleEnd = document.createElement("p");
   publicSaleEnd.classList.add("end-p");
+
   const publicEndSpan = document.createElement("span");
   publicEndSpan.classList.add("end-span");
   publicEndSpan.innerText = name.publicSalesEnd;
+
   publicSaleEnd.append("Ends:", publicEndSpan);
 
   publicSaleContainer.appendChild(publicSaleLabel);
@@ -420,8 +491,10 @@ function CreateContainer(name, index) {
 
   const middleLabelsDiv = document.createElement("div");
   middleLabelsDiv.classList.add("manual-nav");
+
   middleLabelsDiv.appendChild(middleLabel1);
   middleLabelsDiv.appendChild(middleLabel2);
+
   infoMiddle.appendChild(infoMiddleInner);
   infoMiddle.appendChild(middleLabelsDiv);
 
@@ -442,9 +515,11 @@ function CreateContainer(name, index) {
   bottomInner1FirstCont.classList.add("b-inner1-cont");
 
   const eventHeader = document.createElement("header");
+
   const eventTitle = document.createElement("p");
   eventTitle.classList.add("title");
   eventTitle.innerText = "Events Guideline";
+
   const eventIcon = document.createElement("i");
   eventIcon.classList.add("ri-add-circle-fill");
 
@@ -463,6 +538,7 @@ function CreateContainer(name, index) {
   bottomInner1SecondCont.classList.add("b-inner1-cont", "second");
 
   const officeHeader = document.createElement("header");
+
   const officeTitle = document.createElement("p");
   officeTitle.classList.add("title");
   officeTitle.innerText = "Office Details";
@@ -498,6 +574,7 @@ function CreateContainer(name, index) {
   const parkingTitle = document.createElement("p");
   parkingTitle.classList.add("title");
   parkingTitle.innerText = "Parking Detail";
+
   const parkingIcon = document.createElement("i");
   parkingIcon.classList.add("ri-add-circle-fill");
 
@@ -520,6 +597,7 @@ function CreateContainer(name, index) {
   const gInfoTitle = document.createElement("p");
   gInfoTitle.classList.add("title");
   gInfoTitle.innerText = "General Info";
+
   const gInfoIcon = document.createElement("i");
   gInfoIcon.classList.add("ri-add-circle-fill");
 
@@ -552,6 +630,7 @@ function CreateContainer(name, index) {
   //bottom inner appends
   infoBottomInner.appendChild(bottomInnerRadio1);
   infoBottomInner.appendChild(bottomInnerRadio2);
+
   infoBottomInner.appendChild(bottomInner1);
   infoBottomInner.appendChild(bottomInner2);
 
@@ -561,8 +640,10 @@ function CreateContainer(name, index) {
 
   const bottomLabelsDiv = document.createElement("div");
   bottomLabelsDiv.classList.add("manual-nav");
+
   bottomLabelsDiv.appendChild(bottomLabel1);
   bottomLabelsDiv.appendChild(bottomLabel2);
+
   infoBottom.appendChild(infoBottomInner);
   infoBottom.appendChild(bottomLabelsDiv);
 
@@ -588,24 +669,24 @@ function createLabel(forAttribute) {
   label.classList.add("manual-btn");
   return label;
 }
-// addName(name); //1
-// addPromoter(name); //2
-// addTimeZone(name); //9
-// addPriceRice(name); //5
-// addDate(name); //7
-// addTime(name); //8
-// addGuidelineInfo(name); //13
-// addTicket(name); //10
-// addPublicSales(name); //11
-// addPresale(name); //12
-// addSaleStatus(name); //4
-// addAddress(name); //6
-// addParkingDetail(name); //15
-// addOfficeInfo(name); //14
-// addGeneralInfo(name); //16
-// addImages(name); //3
-function addName(name) {}
-function addPromoter(name) {}
+
+function addStatusMain(name) {
+  const statusMainP = document.createElement("p");
+  const statusMainIcon = document.createElement("i");
+  statusMainIcon.classList.add("ri-circle-line");
+
+  if (name.ticketSaleStatus === "rescheduled") {
+    statusMainIcon.style.backgroundColor = "yellow";
+  } else if (name.ticketSaleStatus === "onsale") {
+    statusMainIcon.style.backgroundColor = "green";
+  } else if (name.ticketSaleStatus === "offsale") {
+    statusMainIcon.style.backgroundColor = "red";
+  }
+
+  statusMainP.append(statusMainIcon, name.ticketSaleStatus);
+  return statusMainP;
+}
+
 function addImage(name) {
   let imgUrl = name.image;
   if (imgUrl !== "no image provided") {
@@ -618,6 +699,7 @@ function addImage(name) {
     return null;
   }
 }
+
 function addGeneralInfo(name) {
   const generalInfoUl = document.createElement("ul");
   generalInfoUl.classList.add("info-ul");
@@ -655,12 +737,15 @@ function addOffice(name) {
   let paymentMethod = name.officeInfo.acceptedPaymentDetail
     ? name.officeInfo.acceptedPaymentDetail
     : "no payment info provided";
+
   let openHoursInfo = name.officeInfo.openHoursDetail
     ? name.officeInfo.openHoursDetail
     : "no office open hours info provided";
+
   let phoneNInfo = name.officeInfo.phoneNumberDetail
     ? name.officeInfo.phoneNumberDetail
     : "no phone number provided";
+
   let willCallInfo = name.officeInfo.willCallDetail
     ? name.officeInfo.willCallDetail
     : "no will call info provided";
@@ -693,8 +778,7 @@ function addOffice(name) {
   }
   return officeUl;
 }
-function addSaleStatus(name) {}
-function addPriceRice(name) {}
+
 function addAddress(name) {
   let address = document.createElement("p");
   address.classList.add("address");
@@ -726,15 +810,6 @@ function addAddress(name) {
 
   return address.innerText ? address : null;
 }
-function addDate(name) {}
-function addTime(name) {
-  //timezone
-  //time
-}
-function addTimeZone(name) {}
-function addTicket(name) {}
-function addPublicSales(name) {}
-function addPresale(name) {}
 
 function presale(name) {
   const middleInner2Cont = document.createElement("div");
@@ -749,12 +824,14 @@ function presale(name) {
     name.presales.forEach((presale) => {
       const presaleContainer = document.createElement("div");
       presaleContainer.classList.add("presale-cont");
+
       const providerName = document.createElement("p");
       providerName.classList.add("provide-name");
       providerName.innerText = presale.presaleName;
 
       const presaleStart = document.createElement("p");
       presaleStart.classList.add("preS-start-p");
+
       const startSpan = document.createElement("span");
       startSpan.classList.add("presale-start-span");
       startSpan.innerText = presale.preStartTime;
@@ -762,9 +839,11 @@ function presale(name) {
 
       const presaleEnd = document.createElement("p");
       presaleEnd.classList.add("preS-end-p");
+
       const endSpan = document.createElement("span");
       endSpan.classList.add("presale-end-span");
       endSpan.innerText = presale.preEndTime;
+
       presaleEnd.append("Ends:", endSpan);
 
       presaleContainer.appendChild(providerName);
@@ -781,10 +860,6 @@ function presale(name) {
   }
   return middleInner2Cont;
 }
-function addGuidelineInfo(name) {}
-function addOfficeInfo(name) {}
-function addParkingDetail(name) {}
-// function addGeneralInfo(name) {}
 
 function addDropMenuValues(dropmenuArr) {
   addFirstOption();
@@ -796,6 +871,7 @@ function addDropMenuValues(dropmenuArr) {
   });
   checkTooltipVisibility();
 }
+
 function addFirstOption() {
   const firstOption = dropMenu.querySelector('option[value="all"]');
   dropMenu.innerHTML = "";
@@ -811,6 +887,7 @@ function toggleTooltipVisibility(shouldShow) {
     dropmenuTooltip.classList.add("disabled-tooltip");
   }
 }
+
 function checkTooltipVisibility() {
   const isFormEmpty = formInputEl.value.trim() === "";
   const isDropMenuEmpty = dropMenu.options.length <= 1;
@@ -823,6 +900,7 @@ function checkTooltipVisibility() {
     dropmenuTooltip.setAttribute("aria-hidden", "true");
   }
 }
+
 function fixNav() {
   if (window.scrollY > 50) {
     document.body.classList.add("fixed-nav");
@@ -851,10 +929,12 @@ function disabledDropMenu() {
   dropMenu.disabled = true;
   checkTooltipVisibility();
 }
+
 function enabledDropMenu() {
   dropMenu.disabled = false;
   checkTooltipVisibility();
 }
+
 function changeRadioBg() {
   const Infocontainers = document.querySelectorAll(".main");
 
@@ -915,6 +995,7 @@ function accordionFuntion(accordion) {
   });
 }
 
+//switch between accordions
 function removeOpen(index1, accordion) {
   accordion.forEach((item2, index2) => {
     if (item2.classList.contains("second")) {
@@ -938,5 +1019,3 @@ function removeOpen(index1, accordion) {
     }
   });
 }
-accordionFuntion(accordionContent1);
-accordionFuntion(accordionContent2);
