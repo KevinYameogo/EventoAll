@@ -46,9 +46,6 @@ async function getData() {
     formInputEl.classList.remove("noValue-Error");
   }
 
-  // const url = `https://app.ticketmaster.com/discovery/v2/events.json?countryCode=${formValue}&apikey=PtPNyHAZ9lbIGybBQd25cIzHOGt1DkAX`;
-  // const url = `https://app.ticketmaster.com/discovery/v2/events.json?countryCode=${formValue}&apikey=${process.env.TICKETMASTER_API_KEY}`;
-
   try {
     hasRetrievedData = true;
     // const response = await fetch(url);
