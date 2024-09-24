@@ -49,7 +49,9 @@ async function getData() {
   try {
     hasRetrievedData = true;
     // const response = await fetch(url);
-    const response = await fetch(`/api/events?countryCode=${formValue}`);
+    const response = await fetch(
+      `https://nodejs-serverless-function-express-xi-ecru.vercel.app/api/events?countryCode=${formValue}`
+    );
     if (!response.ok) {
       throw new Error(`HTTP Error! Status: ${response.status}`);
     }
