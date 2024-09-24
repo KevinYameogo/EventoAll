@@ -16,4 +16,4 @@
 
 ## visualizer
 
-![](/public/eventoall-image.png)
+![](/eventoall-image.png)
