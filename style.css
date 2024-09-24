@@ -202,7 +202,7 @@ a {
   background-color: #333;
 }
 .form-input {
-  background-image: url("/public/search-line.png");
+  background-image: url("/search-line.png");
   background-repeat: no-repeat;
   font-size: 1.8rem;
   padding: 12px 20px 12px 40px;
