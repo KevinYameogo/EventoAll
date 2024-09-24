@@ -49,9 +49,7 @@ async function getData() {
   try {
     hasRetrievedData = true;
     // const response = await fetch(url);
-    const response = await fetch(
-      `http://localhost:3000/api/events?countryCode=${formValue}`
-    );
+    const response = await fetch(`/api/events?countryCode=${formValue}`);
     if (!response.ok) {
       throw new Error(`HTTP Error! Status: ${response.status}`);
     }
