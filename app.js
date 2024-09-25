@@ -48,7 +48,7 @@ async function getData() {
 
   try {
     hasRetrievedData = true;
-    // const response = await fetch(url);
+
     const response = await fetch(
       `https://nodejs-serverless-function-express-xi-ecru.vercel.app/api/events.mjs?countryCode=${formValue}`
     );
