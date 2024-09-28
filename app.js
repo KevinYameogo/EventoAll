@@ -52,19 +52,32 @@ async function getData() {
     const response = await fetch(
       `https://nodejs-serverless-function-express-xi-ecru.vercel.app/api/events.mjs?countryCode=${formValue}`
     );
-    if (!response.ok) {
-      throw new Error(`HTTP Error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (!data._embedded || !data._embedded.events) {
+
+    //handle no event
+    if (response.status === 404) {
       popupMain.classList.add("is-active");
       document.documentElement.classList.add("no-scroll");
-      popupText.innerHTML = `There are currently no events listed for ${formValue}. Try a different country code, as ${formValue} lacks the required embedded arrays for event listings.`;
+      popupText.innerHTML = `There are currently no events listed for ${formValue}. Try a different country code.`;
       addFirstOption();
       disabledDropMenu();
       infoListEl.innerHTML = "";
       return;
     }
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // if (!data._embedded || !data._embedded.events) {
+    //   popupMain.classList.add("is-active");
+    //   document.documentElement.classList.add("no-scroll");
+    //   popupText.innerHTML = `There are currently no events listed for ${formValue}. Try a different country code, as ${formValue} lacks the required embedded arrays for event listings.`;
+    //   addFirstOption();
+    //   disabledDropMenu();
+    //   infoListEl.innerHTML = "";
+    //   return;
+    // }
     displayEvents(data);
   } catch (error) {
     hasRetrievedData = false;
