@@ -69,15 +69,7 @@ async function getData() {
     }
 
     const data = await response.json();
-    // if (!data._embedded || !data._embedded.events) {
-    //   popupMain.classList.add("is-active");
-    //   document.documentElement.classList.add("no-scroll");
-    //   popupText.innerHTML = `There are currently no events listed for ${formValue}. Try a different country code, as ${formValue} lacks the required embedded arrays for event listings.`;
-    //   addFirstOption();
-    //   disabledDropMenu();
-    //   infoListEl.innerHTML = "";
-    //   return;
-    // }
+
     displayEvents(data);
   } catch (error) {
     hasRetrievedData = false;
