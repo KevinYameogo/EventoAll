@@ -1,3 +1,4 @@
+![Alt](https://repobeats.axiom.co/api/embed/87c92ae6a1db78e496295a9338c4d6b6c31af399.svg "Repobeats analytics image")
 # EventoALL: Html, CSS, and JS Project.
 
 ## A project demonstrating how to fetch and display data from an API using Javascript.
